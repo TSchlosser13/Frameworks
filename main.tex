@@ -1,0 +1,887 @@
+%===============================================================================
+% A Consolidated Overview of
+%  Frameworks, Libraries, and Tools
+%  for Machine Learning and Computer Vision
+%===============================================================================
+% v0.1 - 01.03.2026 (current version): init
+%
+% 2026 Tobias Schlosser and Michael Friedrich
+%
+% This manuscript is licensed under the Creative Commons Attribution 4.0
+%  International (CC BY 4.0) license
+%  https://creativecommons.org/licenses/by/4.0/deed
+%===============================================================================
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% documentclass
+
+\documentclass{article}
+
+\usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
+
+
+% usepackages
+
+\usepackage{lmodern, mathtools, microtype, textgreek}
+
+\usepackage[main=english, ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage[hyphens]{url}
+\usepackage[colorlinks, citecolor=LimeGreen, pagebackref=true]{hyperref}
+\usepackage[dvipsnames, table]{xcolor}
+
+\usepackage{cite}
+
+% https://ctan.net/macros/latex/contrib/hyperref/doc/hyperref-doc.pdf
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{%
+    \ifnum #3 > 0 {%
+        \ifnum #3 = 1 {%
+            \ifnum #1 = 1 {%
+                \\ (1 citation on 1 page: #2)
+            } \else {%
+                \\ (1 citation on #1 pages: #2)
+            } \fi
+        } \else {%
+            \ifnum #1 = 1 {%
+                \\ (#3 citations on 1 page: #2)
+            } \else {%
+                \\ (#3 citations on #1 pages: #2)
+            } \fi
+        } \fi
+    } \fi
+}
+
+\usepackage{tikz}
+\usetikzlibrary{
+    arrows,
+    backgrounds,
+    calc,
+    decorations,
+    calligraphy,
+    fit,
+    positioning,
+    shapes,
+    spy
+}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{colorbrewer, fillbetween}
+
+\usepackage[hang]{caption}
+
+\usepackage{array, diagbox, float, longtable, makecell, multirow, subfig, tabularx, xfrac}
+
+\usepackage[export]{adjustbox}
+
+\usepackage[defaultlines=10, all]{nowidow}
+
+\setlength{\parskip}{   1em }
+\setlength{\parindent}{ 0em }
+
+\addtolength{\skip\footins}{1cm}
+
+\renewcommand*{\arraystretch}{1.33}
+
+\linespread{1.1}\selectfont
+
+\newcolumntype{P}[1]{>{ \centering  \arraybackslash }p{#1}}
+\newcolumntype{Q}[1]{>{ \raggedleft \arraybackslash }p{#1}}
+\newcolumntype{M}[1]{>{ \centering  \arraybackslash }m{#1}}
+\newcolumntype{N}[1]{>{ \raggedleft \arraybackslash }m{#1}}
+\newcolumntype{B}[1]{>{ \centering  \arraybackslash }b{#1}}
+\newcolumntype{C}[1]{>{ \raggedleft \arraybackslash }b{#1}}
+
+
+% ORCID
+
+\usepackage{fontawesome5}
+
+% With / without "\thinspace" before "\textsuperscript{...}"
+% \newcommand{\ORCID}[1]{\thinspace\textsuperscript{\href{https://orcid.org/#1}{\textcolor[HTML]{A6CE39}{\faOrcid}}}}
+\newcommand{\ORCID}[1]{\textsuperscript{\href{https://orcid.org/#1}{\textcolor[HTML]{A6CE39}{\faOrcid}}}}
+
+\newcommand{\ORCIDSchlosser}{0000-0002-0682-4284} % ORCID Tobias Schlosser
+\newcommand{\ORCIDFriedrich}{0000-0001-6326-4749} % ORCID Michael Friedrich
+
+
+% Page numbering
+\usepackage{fancyhdr, lastpage}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyfoot[C]{\thepage/\pageref{LastPage}}}
+\fancyfoot[C]{\thepage/\pageref{LastPage}}
+
+
+% Miscellaneous
+
+\usepackage[subfigure]{tocloft}
+
+% "How to write a perfect equation parameters description?"
+% https://tex.stackexchange.com/questions/95838/how-to-write-a-perfect-equation-parameters-description
+\newenvironment{conditions}[1][where:]
+    {\hspace{0.02\textwidth} #1 \begin{tabular}[t]{>{$}l<{$} @{${}={}$} l}}
+    {\end{tabular}\\[\belowdisplayskip]}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\begin{document}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{\Huge A Consolidated Overview of \\ Frameworks, Libraries, and Tools \\ for Machine Learning and Computer Vision}
+
+\author{
+    \begin{tabular}{P{0.45\textwidth}P{0.45\textwidth}}
+        Tobias Schlosser\ORCID{\ORCIDSchlosser} &
+        Michael Friedrich\ORCID{\ORCIDFriedrich} \\[1ex]
+        Dresden University of Technology &
+        Chemnitz University of Technology \\
+        01307 Dresden, Germany &
+        09107 Chemnitz, Germany \\
+        \small\texttt{\{firstname.lastname\}@tu-dresden.de} &
+        \small\texttt{\{firstname.lastname\}@cs.tu-chemnitz.de} \\
+    \end{tabular}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\maketitle
+
+
+
+
+\section*{Abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Machine Learning (ML) and Computer Vision (CV) progress is increasingly driven not only by algorithmic innovation, but by the software ecosystems that enable rapid experimentation, reproducible evaluation, and reliable deployment. This manuscript provides a consolidated overview of tools commonly used across the ML/CV lifecycle, spanning programming languages and development environments, general-purpose scientific computing libraries, core ML frameworks, and specialized CV toolkits for tasks such as detection and segmentation. We structure the discussion along practical pipeline stages and highlight how components interact in real projects: data handling and preprocessing, model development and training, performance profiling and benchmarking, experiment organization, and deployment-oriented engineering. Beyond naming and categorizing tools, we emphasize selection criteria that frequently determine long-term success in practice, including ecosystem maturity, interoperability, hardware acceleration, scalability, and maintainability. We also connect current trends---notably transformer-centric modeling, increasing automation of tuning and training workflows, and privacy- and compliance-aware learning setups---to engineering best practices such as environment pinning, containerization, version control, testing, and monitoring. The result is a practitioner-oriented reference intended to support researchers and engineers in assembling sustainable, end-to-end ML/CV stacks across application domains.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\renewcommand{\contentsname}{Table of Contents}
+
+\tableofcontents
+
+
+
+
+\clearpage
+
+
+
+
+\section{Introduction and Motivation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Machine Learning (ML) and Computer Vision (CV) have matured into core technologies across science and engineering, with impact ranging from medical imaging and industrial inspection to robotics and large-scale information retrieval. Beyond algorithms and hardware, practical progress is increasingly driven by software ecosystems that enable rapid experimentation, reproducible evaluation, and reliable deployment. As a result, ML/CV work is often determined by the surrounding tooling: how data is ingested and transformed, how experiments are organized and tracked, how models are trained and profiled on accelerators, and how inference is packaged, served, and monitored in real systems.
+
+At the same time, the tooling landscape is fast-moving and fragmented. Overlapping frameworks, frequent releases of pretrained models, evolving accelerator stacks, and a growing set of tools for tracking, annotation, and deployment can make it difficult to choose components that remain maintainable over time. This manuscript provides a consolidated overview of commonly used tools across the ML/CV lifecycle, emphasizing their typical roles, interoperability considerations, and selection criteria such as ecosystem maturity, scalability, hardware acceleration, and long-term maintainability. The goal is to support both newcomers seeking orientation and experienced practitioners assembling robust, sustainable ML/CV stacks.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Emerging trends}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Transformer-based architectures have become a dominant design pattern across modalities and increasingly shape the surrounding tooling. The widespread availability of pretrained models has shifted many workflows from training from scratch toward adaptation and fine-tuning, which in turn elevates the importance of model hubs, standardized checkpoints, dataset interfaces, and utilities for efficient inference. As model sizes and context lengths grow, performance-oriented components such as optimized attention kernels, memory-efficient training strategies, mixed-precision execution, and distributed parallelism have moved to default requirements. Multimodal systems further extend these demands by combining text, vision, and structured signals, which motivates unified preprocessing pipelines, shared embedding spaces, and evaluation tooling that can capture cross-modal behavior.
+
+At the same time, automation is accelerating across the ML stack. Hyperparameter optimization and AutoML frameworks reduce the manual effort required to search over architectures, training schedules, and preprocessing choices. This aligns with a broader shift toward configuration-driven and pipeline-oriented development, where experiments are expressed declaratively and executed reproducibly across local machines, servers, or clusters. Standardized formats and runtimes also play an increasingly important role: model export and interchange mechanisms, along with inference runtimes, are designed to reduce friction when moving models between frameworks and deployment targets. In practice, this supports heterogeneous workflows in which training may happen in one framework while inference and serving rely on specialized runtimes optimized for latency, throughput, or platform constraints.
+
+In parallel, privacy- and compliance-driven approaches increasingly influence how ML/CV systems are engineered. Federated learning aims to keep sensitive data decentralized while still enabling collaborative model training, requiring orchestration software that can coordinate distributed execution, enforce policy constraints, and provide robust auditing. On-device inference and edge deployment similarly motivate new software patterns, emphasizing model compression, quantization, hardware-aware optimization, and secure update mechanisms. Together, these trends push tool ecosystems toward stronger support for secure data handling, provenance tracking, governance workflows, and operational monitoring, reflecting the reality that modern ML systems must satisfy not only performance goals but also reliability, safety, and regulatory requirements.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Challenges}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Despite the maturity of many libraries, practitioners face recurring challenges when moving from a working prototype to a reliable system. Training at scale is rarely a matter of adding more GPUs alone. It requires coordination of hardware acceleration, distributed execution, and data throughput. Bottlenecks frequently shift between compute, memory bandwidth, interconnect communication, and input pipelines, and seemingly minor choices, such as batch sizes, precision settings, augmentation strategies, or data sharding, can determine whether training is stable and efficient. Memory management is particularly critical for modern architectures. Long sequences, high-resolution inputs, and large batch sizes can quickly exceed device limits, motivating techniques such as mixed precision, gradient checkpointing, and parallelism strategies.
+
+Reproducibility remains difficult even for experienced teams. Results can vary due to dependencies, nondeterministic kernels, differences in accelerator drivers, and subtle variations in preprocessing or random seeds. In addition, experiment metadata is often incomplete. It is common to log metrics and final checkpoints but omit essential details such as exact package versions, data snapshots, augmentation settings, preprocessing code, and hardware/runtime configurations. As a consequence, reproducing a reported number weeks later can become a forensic exercise rather than a routine rerun. Robust practices therefore require disciplined version pinning, environment capture, dataset versioning, and structured experiment tracking.
+
+Finally, deployed ML systems must operate in dynamic environments and interact with real users, which introduces failure modes that are not visible in offline benchmarks. Dataset bias and distribution shift can degrade performance after deployment, and robustness issues can appear under rare conditions, adversarial inputs, or changing acquisition pipelines. Interpretability and transparency are often necessary for debugging and for meeting stakeholder expectations, particularly in high-stakes domains. Governance concerns, including privacy, consent, and accountability, further shape how systems are designed, tested, and monitored.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Best practices}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Reliable ML/CV development benefits from treating models as components of a broader software system rather than isolated research artifacts. This perspective shifts attention toward engineering practices that preserve correctness, enable collaboration, and make results reproducible. Version control provides the foundation for traceability, whereas code review helps to catch logical errors in preprocessing, evaluation, and training code that could otherwise invalidate results. Continuous integration (CI) adds automated checks concerned with formatting, linting, unit tests, and pipeline tests so that changes remain safe as the codebase grows.
+
+Environment management is equally central because dependency drift is a common source of irreproducible experiments. Isolated environments and explicit version pinning reduce accidental changes, while containerization with tools such as Docker supports portability across developer machines, shared servers, and compute clusters. In practice, a robust workflow captures not only the framework versions but also the broader runtime context, also including operating system details and configuration files used to launch experiments.
+
+For deployed models, best practices extend beyond reproducibility to operational reliability. Monitoring is essential to detect concept/data drifts, shifts in input quality, and performance regressions that may not be apparent from offline validation. Automated evaluation on curated datasets, alerts on distribution changes, and logging of model outputs help identify issues early. Testing should also include robustness checks, encompassing behavior under missing or corrupted inputs, stress tests for latency and throughput, and validation of postprocessing and thresholding logic.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Programming Languages and Development Tooling}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Modern ML/CV projects typically combine multiple programming languages and execution environments. The dominant workflow is interactive prototyping in a high-level language (most often Python), paired with performance-optimized backends implemented in compiled languages (commonly C/C++) and specialized accelerator stacks (e.g., CUDA on NVIDIA hardware). As models and datasets grow, engineering concerns become as important as language expressiveness: dependency management, reproducibility, debugging support, and portability across machines and clusters.
+
+A practical way to think about the language choice is to separate the user-facing layer used for experimentation, data wrangling, and orchestration from the compute layer that executes kernels efficiently on CPUs/GPUs/TPUs (central/graphics/tensor processing units). Many libraries deliberately expose a Python application programming interface (API) while internally relying on optimized native code, so developers can remain productive without giving up performance. When latency, memory footprint, or determinism are strict requirements (e.g., embedded inference or real-time robotics), the balance often shifts toward C/C++ (or platform-specific runtimes) in the deployment stage.
+
+In addition to the language itself, the surrounding environment strongly shapes developer productivity and reproducibility. Dependency isolation and version pinning (virtual environments and Conda environments) reduce ``it works on my machine'' failures and help reproduce experiments months later. Integrated development environment (IDE) support (debuggers, profilers, and refactoring) can significantly accelerate iteration for large codebases, while notebooks remain valuable for exploratory analysis and reporting. Portability practices such as containerization (e.g., Docker) and infrastructure-as-code help move from local development to shared servers and clusters with fewer surprises. Finally, quality assurance measures---static analysis, formatting, and unit testing (including data and pipeline tests)---become increasingly necessary as ML codebases approach the complexity of traditional software systems.
+
+To further optimize the efficiency of those workflows, this section focuses on two environment-level decisions that strongly influence productivity and reproducibility: (i) the development interface used to author and run code, and (ii) the integration of AI-based coding assistance. We compare integrated development environments and notebook-centric workflows, emphasizing practical trade-offs for ML/CV projects (Table~\ref{table:overview_IDEs_notebooks}). We then review common AI coding assistants, contrasting their interaction modality, integration depth, and model-backend support (Table~\ref{table:overview_AI_coding_assistants}). Together, these comparisons motivate hybrid workflows that combine notebooks for exploration with IDEs and supporting tools for engineering, testing, and deployment.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Integrated development environments and notebooks}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Table~\ref{table:overview_IDEs_notebooks} summarizes the main trade-offs among widely used development environments for machine learning and computer vision, with a focus on modality, operating system compatibility, payment model, typical usage patterns, and AI coding assistance support. The comparison highlights that the choice of environment is not only a matter of personal preference, but also a design decision that affects reproducibility, implementation speed, maintainability, and integration with hardware-accelerated workflows.
+
+A first key distinction is the \emph{modality} of the tools. Desktop IDEs such as Visual Studio Code, PyCharm, Spyder, and Visual Studio are primarily suited for structured software development and long-lived projects. In contrast, Jupyter Notebook/JupyterLab, Google Colab, and Kaggle Notebooks emphasize interactive, notebook-based workflows that are particularly effective for exploratory data analysis, rapid prototyping, visualization, and experiment documentation. This distinction is especially relevant in ML/CV projects, where early-stage experimentation and later-stage engineering often require different tool characteristics \cite{kreuzberger2023machine}.
+
+Furthermore, desktop IDEs differ in their typical strengths. Visual Studio Code and PyCharm provide broad support for Python-centric ML pipelines while also offering strong debugging, project organization, and extensibility. Visual Studio is particularly relevant when CV systems require performance-critical C++ components, CUDA kernels, or close integration with native libraries. Spyder occupies a different niche by supporting a scientific-computing workflow that is efficient for interactive scripting and analysis, but less optimized for large multi-module software systems. These differences suggest that tool selection should be aligned with the expected project maturity and engineering depth.
+
+Notebook environments (Jupyter Notebook/JupyterLab) and cloud notebook platforms (Google Colab, Kaggle Notebooks) address a different set of requirements. Jupyter-based environments are well suited for transparent experimentation and literate programming, but they require careful execution discipline due to hidden state and non-linear execution order. Cloud notebooks extend this paradigm by reducing local setup effort and enabling easy sharing and managed compute access. However, there is a tradeoff indicated by their operational limitations, including reduced control over runtime configuration and, in the case of Kaggle, quota-based resource constraints. Thus, cloud notebooks are highly effective for prototyping, educational use, and benchmark-style experiments, but they may be less suitable as the sole environment for production-oriented development.
+
+From an infrastructure perspective, most tools support cross-platform operation (Windows, macOS, Linux), with Visual Studio being the main exception due to its Windows-centric deployment. The browser-based cloud notebooks are effectively operating-system independent, which lowers barriers to entry and simplifies collaboration across heterogeneous systems. In addition, the underlying payment models shows that the ecosystem is dominated by either free/open-source tools or freemium models (free tier plus paid tiers), which is advantageous for research groups and industrial teams that need to balance capability with licensing cost.
+
+Finally, we review AI coding assistance support, as it is an increasingly relevant selection criterion. The comparison suggests a clear gradient: mainstream desktop IDEs (Visual Studio Code, PyCharm, Visual Studio) currently offer the strongest and most mature integration of AI-supported coding features, Jupyter-based and cloud notebook workflows provide moderate support, and Spyder currently offers comparatively limited integration. For ML/CV development, this has practical implications for developer productivity (e.g., boilerplate generation, code completion, and refactoring support), but it does not remove the need for rigorous validation, especially in experimental and safety-relevant contexts.
+
+Overall, Table~\ref{table:overview_IDEs_notebooks} suggests a hybrid workflow strategy: notebook environments are well suited for data exploration and model prototyping, while full IDEs become increasingly important for modularization, testing, optimization, and deployment. In practice, many ML/CV projects benefit from combining both modalities rather than treating them as mutually exclusive alternatives.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\begin{longtable}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.55\textwidth}|}
+    \caption{Comparative overview of IDEs and notebook environments suitable for ML and CV tasks with modality, OS compatibility, payment model, typical use cases, and AI coding assistance.}
+    \label{table:overview_IDEs_notebooks} \\
+
+
+    \hline
+    \textbf{IDE or notebook} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{IDE or notebook} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endhead
+
+    \multicolumn{3}{r}{\textit{continued on next page}} \\
+    \endfoot
+
+    \endlastfoot
+
+
+    Google Colab \cite{bisong2019google}
+    & Cloud notebook \newline \textbf{OS:} Browser-based (OS-independent) \newline \textbf{Payment model:} Free tier / Paid tiers
+    & Browser-based hosted Jupyter Notebook environment with managed GPU/TPU resources; convenient for quick experimentation, sharing, and reproducible demos; limited control over environment and hardware configuration. \newline \textbf{AI coding assistance:} \textit{Medium} (platform-integrated and browser-based assistance is common, but features vary by account type and region).
+    \\ \hline
+
+    Jupyter Notebook \cite{kluyvertextordfeminine12016jupyter} / JupyterLab \cite{perkel2018jupyter}
+    & Notebook environment \newline \textbf{OS:} Windows / macOS / Linux \newline \textbf{Payment model:} Free (open source)
+    & Interactive notebook environments for exploratory analysis, model prototyping, visualization, and experiment documentation; support Python, R, Julia, and other kernels. Jupyter Notebook provides a simpler, document-centric interface, while JupyterLab offers a more extensible multi-document workspace (e.g., notebooks, terminals, file browser, and tabs); both require care due to hidden state and execution order issues. \newline \textbf{AI coding assistance:} \textit{Medium} (available via Jupyter/JupyterLab extensions and external assistants; integration quality varies by setup).
+    \\ \hline
+
+    Kaggle Notebooks \cite{preda2023developing}
+    & Cloud notebook \newline \textbf{OS:} Browser-based (OS-independent) \newline \textbf{Payment model:} Free (quota-limited)
+    & Hosted Jupyter-based notebook environment integrated with Kaggle datasets and competitions; facilitates benchmarking, experimentation, and collaboration; suitable for small to medium-scale ML workflows. \newline \textbf{AI coding assistance:} \textit{Medium} (some platform/external assistant support available, but less integrated than full desktop IDEs).
+    \\ \hline
+
+    PyCharm \cite{islam2015mastering}
+    & Python IDE \newline \textbf{OS:} Windows / macOS / Linux \newline \textbf{Payment model:} Free (Community) / Paid (Professional)
+    & Full-featured Python IDE from JetBrains with advanced debugging, refactoring, and project navigation; Professional version includes Jupyter support and scientific tools; suitable for large ML projects and production-grade codebases. \newline \textbf{AI coding assistance:} \textit{High} (strong plugin/vendor ecosystem; features may depend on edition and subscription).
+    \\ \hline
+
+    Spyder \cite{raybaut2009spyder}
+    & Scientific IDE \newline \textbf{OS:} Windows / macOS / Linux \newline \textbf{Payment model:} Free (open source)
+    & Python-focused IDE inspired by MATLAB; provides IPython console, variable explorer, and integrated plotting; well suited for exploratory analysis and rapid prototyping but less optimized for large multi-module ML systems. \newline \textbf{AI coding assistance:} \textit{Low} (limited native support; typically relies on external tools or community plugins).
+    \\ \hline
+
+    Visual Studio \cite{amann2016study}
+    & C++ / CUDA IDE \newline \textbf{OS:} Windows (Visual Studio) \newline \textbf{Payment model:} Free (Community) / Paid (Professional, Enterprise)
+    & Comprehensive IDE for C++ and CUDA development; relevant for performance-critical computer vision modules, custom CUDA kernels, and integration of Python with native extensions; strong debugging and profiling tools. \newline \textbf{AI coding assistance:} \textit{High} (strong integrated and extension-based support for completion, refactoring, and chat).
+    \\ \hline
+
+    Visual Studio Code (VS Code) \cite{tan2023visual}
+    & General-purpose IDE \newline \textbf{OS:} Windows / macOS / Linux \newline \textbf{Payment model:} Free
+    & Lightweight but highly extensible editor with strong Python, C/C++, and CUDA support via extensions; widely used for ML/CV development; supports Jupyter notebooks, debugging, Git integration, remote SSH, and container-based workflows. \newline \textbf{AI coding assistance:} \textit{High} (broad extension ecosystem; code completion, chat, and code-generation assistants widely available).
+    \\ \hline
+\end{longtable}
+
+
+
+
+\clearpage
+
+
+
+
+\subsection{AI coding assistants}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Table~\ref{table:overview_AI_coding_assistants} provides a structured comparison of AI coding assistants suitable for machine learning and computer vision workflows, with emphasis on modality, payment model, supported LLM backends, typical development tasks, and compatibility with common IDE and notebook environments. In contrast to general IDE selection, the central differentiators here are the depth of AI integration, the available model backends, and the degree to which the assistant supports codebase-level editing versus higher-level reasoning.
+
+A first distinction concerns the \emph{interaction modality}. GitHub Copilot, Tabnine, and Gemini Code Assist operate primarily as in-editor assistants, focusing on inline code completion, generation, and short feedback loops during implementation. JetBrains AI Assistant follows the same general pattern but is more tightly integrated into the JetBrains ecosystem, which is particularly relevant for PyCharm-based Python workflows. Cursor represents a different class of tool as an AI-native editor with strong multi-file context and refactoring support, making it well suited for restructuring research code, modularizing notebooks, and performing larger edits across ML/CV repositories. ChatGPT occupies a separate role as a general conversational assistant that is typically used alongside, rather than inside, an IDE or notebook environment.
+
+The \emph{supported LLM backends} are another important differentiator. Copilot and Cursor provide multi-model access, which can be advantageous when users want to switch between models depending on task type (e.g., fast completion vs.\ more capable reasoning). Tabnine emphasizes proprietary and enterprise-oriented deployment options, which aligns with environments that prioritize governance and controlled infrastructure. JetBrains AI Assistant is notable for combining provider-hosted backends with bring your own key (BYOK)/local options, which is relevant for teams requiring more control over data flow or model hosting. ChatGPT is restricted to OpenAI-hosted models but remains broadly useful because of its strong support for explanation, debugging, and experiment planning. Gemini Code Assist centers on Google-managed Gemini models and integrates naturally into editor-based workflows in the Google ecosystem.
+
+The \emph{task profiles} align closely with common phases of ML/CV development. In-editor assistants are most effective for repetitive implementation work, including training-loop scaffolding, dataset and augmentation pipelines, configuration files, utility functions, and test generation. Cursor extends this utility toward repository-scale refactoring, which is valuable when moving from exploratory prototypes to maintainable project structures. ChatGPT is particularly useful for conceptual and diagnostic tasks, such as debugging unstable training behavior, selecting losses and metrics, designing experiments, and drafting reproducible code or documentation. This division of labor maps well to the broader distinction between prototyping and engineering phases in ML/CV projects.
+
+The \emph{IDE and notebook compatibility} information also highlights practical workflow constraints. VS Code and JetBrains IDEs (especially PyCharm) form the most common integration targets across the listed assistants, which makes them strong anchor environments for AI-assisted development. Visual Studio remains relevant for assistants that support C++ and Windows-centric workflows, especially when CV pipelines include native components. Notebook-based workflows (Jupyter, Colab, Kaggle) are commonly supported indirectly, either by editing notebooks in IDEs with AI extensions or by using conversational assistants in parallel such as ChatGPT.
+
+Across the listed tools, the \emph{payment model} is consistently freemium, which lowers the barrier to experimentation while preserving a path to more advanced usage for larger projects or teams. The practical differences therefore arise less from basic availability and more from integration depth, model selection flexibility, and governance-oriented features. For ML/CV development, a combination of one in-editor assistant (for implementation speed) and one conversational assistant (for reasoning and troubleshooting) provides a balanced workflow in many settings.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\begin{longtable}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.55\textwidth}|}
+    \caption{Comparison of AI coding assistants suitable for ML and CV development with respect to modality, payment model, supported LLM backends, typical development tasks, and compatibility with IDE and notebook environments.}
+    \label{table:overview_AI_coding_assistants} \\
+
+
+    \hline
+    \textbf{AI coding assistant} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{AI coding assistant} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endhead
+
+    \multicolumn{3}{r}{\textit{continued on next page}} \\
+    \endfoot
+
+    \endlastfoot
+
+
+    ChatGPT \cite{khojah2024beyond}
+    & General conversational assistant \newline \textbf{Payment model:} Free tier / Paid tiers
+    & Useful for higher-level ML/CV reasoning: debugging training instabilities, loss/metric selection, experiment design, explaining model behavior, writing reproducible training/evaluation code, and generating documentation; typically used side-by-side with an IDE. \newline \textbf{Supported LLM backends:} OpenAI models only (plan-dependent), with selectable GPT variants/modes in ChatGPT; no direct in-product selection of Claude or Gemini. \newline \textbf{Suitable IDEs:} Typically side-by-side usage with any IDE or notebook environment, no direct integration.
+    \\ \hline
+
+    % TODO: Can we find a better reference?
+    Cursor \cite{jiang2025beyond}
+    & AI-native code editor \newline \textbf{Payment model:} Free tier / Paid tiers
+    & Editor with deep AI integration (multi-file context, refactors); helpful for restructuring research code into maintainable modules, migrating notebooks to packages, and performing large-scale edits in CV/ML repositories. \newline \textbf{Supported LLM backends:} Multi-model (plan-dependent): selectable models from major providers (e.g., OpenAI, Anthropic, Google) and additional supported vendors. \newline \textbf{Suitable IDEs:} Standalone editor (VS Code-like); not a plugin for PyCharm, Visual Studio, or Spyder.
+    \\ \hline
+
+    % TODO: Can we find a better reference (focus Gemini)?
+    Gemini Code Assist \cite{team2023gemini}
+    & IDE extension / conversational assistant \newline \textbf{Payment model:} Free tier / Paid tiers
+    & AI coding help integrated into development environments; can generate and explain code and assist with refactors; commonly used for general software tasks that also occur in ML/CV projects (data pipelines, evaluation, tooling). \newline \textbf{Supported LLM backends:} Gemini-family models (Google-managed), with selectable Gemini variants depending on plan and current product availability. \newline \textbf{Suitable IDEs:} VS Code and JetBrains IDEs (including PyCharm); typically used alongside Spyder and browser-based notebooks.
+    \\ \hline
+
+    GitHub Copilot \cite{zhang2023practices}
+    & IDE extension / in-editor assistant \newline \textbf{Payment model:} Free tier / Paid tiers
+    & Code completion and code generation inside IDEs; useful for boilerplate ML training loops, dataset loaders, augmentation pipelines, unit tests, configuration scaffolding, and refactoring suggestions. \newline \textbf{Supported LLM backends:} Multi-model (plan-dependent): OpenAI (GPT/Codex), Anthropic (Claude Haiku/Sonnet/Opus), Google (Gemini), and other provider/vendor models. \newline \textbf{Suitable IDEs:} VS Code, Visual Studio, and JetBrains IDEs (e.g., PyCharm); also supports Jupyter-style workflows when notebooks are edited in these IDEs.
+    \\ \hline
+
+    % TODO: Can we find a better reference?
+    JetBrains AI Assistant \cite{sokolov2024ai}
+    & IDE-integrated assistant \newline \textbf{Payment model:} Free tier / Paid tiers
+    & Native AI features inside JetBrains IDEs; supports code generation, explanation, refactoring, and documentation; useful for Python-heavy ML projects in PyCharm with strong IDE navigation/refactoring support. \newline \textbf{Supported LLM backends:} Provider + BYOK/local (plan-dependent): JetBrains-supported cloud LLMs plus OpenAI-compatible endpoints and local models (e.g., Ollama/LM Studio). \newline \textbf{Suitable IDEs:} JetBrains IDEs (especially PyCharm).
+    \\ \hline
+
+    % TODO: Can we find a better reference?
+    Tabnine \cite{corso2024generating}
+    & IDE extension / in-editor assistant \newline \textbf{Payment model:} Free tier / Paid tiers
+    & Code completion with enterprise-oriented options; can assist with consistent API usage and repetitive ML engineering tasks; often evaluated in settings where privacy controls and governance matter. \newline \textbf{Supported LLM backends:} Tabnine proprietary models by default; chat features may support selected third-party or enterprise-connected LLMs (plan/enterprise-dependent). \newline \textbf{Suitable IDEs:} VS Code, JetBrains IDEs (e.g., PyCharm), and Visual Studio; less central for browser-only notebook workflows.
+    \\ \hline
+\end{longtable}
+
+
+
+
+\clearpage
+
+
+
+
+\section{General Frameworks, Libraries and Tools}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Beyond model-training frameworks, most ML/CV workflows rely on a set of general-purpose libraries for numerical computing, data handling, visualization, and image processing. These tools are used throughout the pipeline: converting and validating raw data, performing exploratory analysis, implementing classical baselines, generating figures for publications, and building utilities that glue together training, evaluation, and deployment.
+
+A typical stack combines numerical foundations (arrays, linear algebra, and optimization) as the substrate for feature engineering and classical ML, data processing for tabular and time-series workloads (joins, aggregations, missing-value handling, and efficient I/O), and visualization for debugging and communication, ranging from quick exploratory plots to publication-ready figures. Many pipelines additionally rely on image and media tooling for reading/writing, conversion, resizing, compression, and batch preprocessing of large collections. Finally, specialized utilities such as symbolic computation (useful for derivations and verification) or graphics APIs (useful for rendering, simulation, and synthetic data) round out practical, end-to-end workflows.
+
+While many of these libraries are not ML-specific, they strongly influence the speed of experimentation and the quality of the surrounding engineering practices. In particular, consistent data formats, deterministic preprocessing, and well-tested utility code are often prerequisites for meaningful benchmarking and reliable deployment.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\begin{longtable}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.55\textwidth}|}
+    \caption{General frameworks, libraries and tools.} \\
+
+
+    \hline
+    \textbf{Framework, library, or tool} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Framework, library, or tool} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endhead
+
+    \multicolumn{3}{r}{\textit{continued on next page}} \\
+    \endfoot
+
+    \endlastfoot
+
+
+    Matplotlib \cite{hunter2007matplotlib} & Visualization & General-purpose plotting for EDA, debugging, training curves, confusion matrices, publication-ready figures; highly customizable. \\ \hline
+    seaborn \cite{waskom2021seaborn} & Visualization & Statistical plotting on top of Matplotlib; fast creation of attractive diagnostic plots; integrates well with pandas. \\ \hline
+    NumPy \cite{harris2020array} & Numeric computing & Core n-dimensional arrays (ndarray), vectorized operations, linear algebra, random sampling; common interchange format in Python ML/CV workflows. \\ \hline
+    OpenGL \cite{neider1993opengl} & Graphics / 3D & Real-time rendering for simulation, synthetic data generation, interactive visualization of images/meshes/point clouds/volumes; often used via higher-level wrappers/engines. \\ \hline
+    pandas \cite{mckinney2010data} & Tabular data & DataFrame-based loading/cleaning/joins/aggregation, feature engineering, train/val/test splits; can become bottleneck for very large datasets (single-machine, in-memory). \\ \hline
+    SciPy \cite{mckinney2010data} & Scientific computing & Numerical routines (optimization, signal processing, interpolation, sparse matrices, stats); supports classical baselines, calibration, filtering, and numerical solvers. \\ \hline
+    statsmodels \cite{seabold2010statsmodels} & Statistical modeling & Interpretable statistical models (GLM, time series), hypothesis tests, confidence intervals; inference-focused baselines and rigorous reporting. \\ \hline
+    SymPy \cite{meurer2017sympy} & Symbolic math & Exact algebra/calculus, equation solving, simplification; useful for analytic derivations and gradient checking in toy setups. \\ \hline
+\end{longtable}
+
+
+
+
+\clearpage
+
+
+
+
+\subsection{Matplotlib and seaborn}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Matplotlib is widely used for creating static, animated, and interactive visualizations. It is commonly used together with NumPy arrays and pandas DataFrames to support exploratory data analysis, debugging, and scientific reporting. Typical tasks include visualizing dataset distributions, inspecting samples and augmentations, plotting training curves and validation metrics, generating confusion matrices, and producing publication-quality figures with control over layout, typography, and export formats. Its flexibility makes it a dependable plotting backend, even when higher-level libraries are used upstream.
+
+Built on top of Matplotlib, seaborn provides a higher-level interface focused on statistical graphics and defaults that yield attractive plots with relatively little code. It simplifies common tasks such as visualizing distributions, categorical comparisons, relationships, and correlation structures, and it integrates naturally with pandas. In practice, seaborn is particularly useful for quick diagnostic plots and communication-ready summaries, while Matplotlib remains the tool of choice when fine-grained customization is required.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{NumPy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+NumPy is a foundational package for scientific computing. It provides the data structure ndarray for efficient storage and manipulation of large, multi-dimensional arrays and matrices, together with a rich set of vectorized operations, linear algebra routines, random number generation, and numerical utilities. Because many higher-level libraries are built on top of NumPy, or accept NumPy arrays as a common interchange format, it effectively serves as the ``lingua franca'' for numerical data in Python-based ML/CV workflows.
+
+In practice, NumPy enables fast computation by pushing work into optimized low-level implementations rather than executing Python loops. This makes it well suited for tasks such as preprocessing features, implementing classical baselines, computing evaluation metrics, and prototyping algorithms that rely on array algebra. Its broadcasting semantics and indexing capabilities support concise expression of operations that would otherwise be verbose, which helps both readability and performance when manipulating images, tensors, and batched data.
+
+While deep learning frameworks introduce their own tensor types, NumPy remains essential for data handling. Data often enters a pipeline as NumPy arrays after decoding and preprocessing, and results are frequently converted back to NumPy for visualization or interoperability with other scientific libraries. At scale, performance considerations shift from NumPy itself to the surrounding pipeline, such as I/O throughput, memory layout, and minimizing unnecessary copies, but a solid understanding of NumPy concepts such as data types and vectorization remains valuable for writing efficient and reliable ML/CV code.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{OpenGL}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+OpenGL is a cross-platform graphics API primarily used for real-time rendering. It plays an important role in ML/CV in scenarios where rendering and visualization are central components of the workflow. Common applications include simulation environments, synthetic data generation, interactive annotation/inspection tools, and high-performance visualization of images, meshes, point clouds, or volumetric data.
+
+In practice, OpenGL is used to render controlled scenes for synthetic data and domain randomization (varying illumination, viewpoint, and materials), to support interactive debugging for vision pipelines (e.g., overlaying detections/segmentations and exploring failure cases), and to enable efficient rendering in 3D perception workflows where point clouds and meshes must be visualized at interactive rates.
+
+Because OpenGL is low-level, developers often use higher-level wrappers or engines that provide windowing, input handling, and asset pipelines. When differentiability is required (e.g., optimization through rendering), specialized differentiable rendering libraries are typically used on top of, or instead of, classical OpenGL pipelines.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{pandas}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+pandas provides high-level data structures and data analysis tools for working with tabular and time-indexed data, most notably the DataFrame. In ML workflows, it is frequently used to load, clean, and transform structured datasets before they are converted into feature matrices or tensors. Common tasks include joining heterogeneous sources, filtering and aggregating records, handling missing values, encoding categorical variables, engineering features from timestamps, and performing train/validation/test splits.
+
+A key advantage of pandas is that it enables expressive, readable data manipulation with relatively little code, which reduces friction during exploratory data analysis and dataset debugging. Its tight integration with common storage formats (CSV, Excel, Parquet, and SQL connectors) and its compatibility with NumPy make it a convenient bridge between raw data sources and downstream ML libraries such as scikit-learn. In practice, many ML pipelines rely on pandas not only for preprocessing but also for maintaining experiment metadata, managing annotation tables, and producing summary statistics for reporting.
+
+As dataset sizes grow, pandas can become a bottleneck because it primarily targets in-memory processing on a single machine. For large-scale workloads, teams often complement pandas with out-of-core or distributed alternatives (e.g., Apache Spark or columnar engines) while keeping the pandas DataFrame interface for prototyping and validation. Even in these scenarios, pandas remains a widely understood and productive tool for inspecting data, verifying transformations, and ensuring that tabular inputs to ML models are consistent and well documented.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{SciPy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SciPy is a core scientific computing library that builds on NumPy by providing a broad collection of algorithms and numerical routines commonly needed in data analysis, ML, and CV. It includes modules for optimization, numerical integration, interpolation, linear algebra and matrix operations, signal processing, spatial data structures, and statistical utilities. These components support many practical tasks that sit adjacent to model training, such as fitting classical baselines, performing parameter estimation, prototyping computational methods, and implementing parts of pipelines that require reliable numerical solvers.
+
+In ML/CV workflows, SciPy is frequently used for feature extraction and filtering, image- and signal-related preprocessing, distance computations, and optimization problems that arise in calibration or classical geometry. Its sparse matrix functionality is particularly relevant for large-scale classical ML methods and graph-based computations, where dense representations would be infeasible. Because SciPy functions are well tested and widely adopted, they often serve as trustworthy building blocks when implementing custom methods or validating results against established numerical routines.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{statsmodels}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+statsmodels is focused on statistical modeling and inference. It provides classes to estimate linear and generalized linear models, time-series models, and other econometric and statistical approaches. Additionally, it enables hypothesis tests, confidence intervals, and diagnostic outputs. In contrast to many ML libraries that prioritize predictive performance, statsmodels emphasizes interpretability and formal statistical inference, making it particularly useful when the goal is to understand relationships in data rather than solely to maximize accuracy.
+
+In ML-related workflows, statsmodels is often used to establish transparent baselines, to validate assumptions about data generation, and to perform exploratory analyses that inform feature engineering and dataset design. Its detailed summaries (parameter estimates, standard errors, p-values, and goodness-of-fit measures) support rigorous reporting and can be valuable in domains where explainability and statistical validity are central. It is also frequently applied in time-series settings, where classical models and diagnostic checks remain important complements to more complex learning-based approaches.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{SymPy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+SymPy is a Python library for symbolic mathematics. It enables exact manipulation of algebraic expressions, calculus operations (e.g., differentiation and integration), equation solving, and symbolic simplification. In ML contexts, SymPy is useful when parts of a method benefit from closed-form derivations or verification beyond what automatic differentiation provides.
+
+Typical uses in ML/CV projects include deriving and validating custom loss functions or regularizers analytically, checking gradients for small toy problems to catch implementation errors, generating readable formulas for documentation and publications, and producing simplified expressions or code-generation targets for performance-critical components.
+
+While deep learning frameworks provide automatic differentiation for most practical training workloads, symbolic computation can still be valuable for debugging, teaching, and ensuring correctness in mathematically intricate parts of a pipeline.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Machine Learning Frameworks, Libraries and Tools}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ML tooling spans a spectrum from classical algorithms (e.g., linear models and tree-based methods) to large-scale deep learning systems. The central differentiator for modern deep learning frameworks is automatic differentiation combined with efficient tensor execution on accelerators and support for distributed training. Around these cores, ecosystems provide model libraries, training abstractions, experiment tracking, data loading utilities, and deployment pathways.
+
+When comparing ML frameworks in practice, several criteria repeatedly matter. Ecosystem maturity and community support influence stability and the breadth of third-party integrations. Hardware acceleration determines achievable throughput and memory efficiency (e.g., kernel coverage, mixed precision, and device support). Distributed training capabilities shape how easily workloads scale to multiple GPUs or nodes. Production readiness matters when models must be exported, served, and monitored reliably. Finally, developer ergonomics---especially debuggability and API clarity---often determines day-to-day productivity.
+
+In many projects, the final stack is hybrid: classical ML libraries provide strong baselines and interpretable models, while deep learning frameworks handle representation learning and end-to-end training. Interoperability mechanisms (common model formats, standardized preprocessing, and consistent dataset schemas) are therefore important to keep experimentation and deployment manageable.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\begin{longtable}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.55\textwidth}|}
+    \caption{Machine learning frameworks, libraries and tools.} \\
+
+
+    \hline
+    \textbf{Framework, library, or tool} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Framework, library, or tool} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endhead
+
+    \multicolumn{3}{r}{\textit{continued on next page}} \\
+    \endfoot
+
+    \endlastfoot
+
+
+    CUDA Toolkit \cite{nickolls2008scalable} & GPU acceleration & NVIDIA platform for GPU computing (compilers, libraries, developer tools); often used indirectly via DL frameworks; version compatibility is a frequent operational concern. \\ \hline
+    cuDNN \cite{chetlur2014cudnn} & GPU acceleration (DL kernels) & Optimized NVIDIA deep learning primitives (convolutions, pooling, normalization, etc.); key contributor to training/inference performance and mixed-precision support. \\ \hline
+    Keras \cite{chollet2015keras} & Deep learning & High-level API for defining/training neural networks; good for rapid prototyping/teaching/standardized training loops; can drop to lower-level TensorFlow for custom logic. \\ \hline
+    PyTorch \cite{paszke2017automatic} & Deep learning & Imperative/dynamic graph style; strong research ergonomics and ecosystem; supports mixed precision, distributed training, export/compile pathways for inference. \\ \hline
+    scikit-learn \cite{pedregosa2011scikit} & Classical ML & Well-tested CPU-focused algorithms for classification/regression/clustering/dim. reduction; composable pipelines, cross-validation, grid/random search; strong baselines and interpretability. \\ \hline
+    TensorFlow \cite{abadi2015tensorflow} & Deep learning & Graph-based execution with eager/compiled modes; strong production/deployment ecosystem; supports scalable/distributed training and multiple deployment targets. \\ \hline
+    TensorBoard \cite{abadi2015tensorflow} & Monitoring / visualization & Experiment visualization for TensorFlow ecosystem (scalars, graphs, histograms, embeddings, images); supports debugging and run comparison. \\ \hline
+\end{longtable}
+
+
+
+
+\clearpage
+
+
+
+
+\subsection{CUDA Toolkit and cuDNN}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The CUDA (Compute Unified Device Architecture) Toolkit is NVIDIA's platform for GPU-accelerated computing, providing compilers, libraries, and developer tools for writing and optimizing GPU kernels. In ML/CV, most users interact with CUDA indirectly through frameworks such as PyTorch or TensorFlow, which ship precompiled CUDA-enabled binaries or build against local CUDA installations.
+
+cuDNN (CUDA Deep Neural Network library) is a performance-critical component of this ecosystem: it provides highly optimized implementations of common deep learning primitives such as convolutions, pooling, normalization, and recurrent operations. Many training-time speedups in practice come from efficient cuDNN kernels, mixed-precision support, and careful memory layout choices handled within the framework.
+
+In day-to-day use, version compatibility is one of the most important operational concerns, because framework binaries typically target specific CUDA and cuDNN versions and mismatches are a common source of installation and runtime errors. Performance tuning is another practical aspect: GPU utilization depends on batch size, input shapes, kernel selection, and I/O throughput, so profiling is often needed to identify whether bottlenecks are compute-, memory-, or data-loading-related. Finally, determinism is a recurring trade-off: some optimized GPU kernels may be nondeterministic, and many frameworks offer flags to prefer deterministic variants at a potential performance cost.
+
+While CUDA/cuDNN are NVIDIA-specific, analogous accelerator stacks exist for other hardware vendors. In heterogeneous environments, portability and operational simplicity can influence whether vendor-specific optimizations are worth the engineering overhead.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Keras}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Keras provides a high-level interface for building and training artificial neural networks with an emphasis on clarity, concise code, and a smooth developer experience. Historically, Keras supported multiple computation backends (including TensorFlow, Theano, and CNTK), but it is now most commonly used as tf.keras, tightly integrated with the TensorFlow ecosystem. This integration simplifies installation and deployment and aligns Keras with TensorFlow's execution, serialization, and serving capabilities.
+
+A defining feature of Keras is its approachable API design. The sequential and functional APIs allow models to be expressed in a readable, modular way, which is particularly useful for rapid prototyping, teaching, and baseline development. Keras also includes many practical components out of the box: common layers, loss functions, optimizers, callbacks, and data pipeline utilities. As a result, developers can quickly implement standard architectures, iterate on hyperparameters, and obtain working training loops with minimal boilerplate. For many applied problems, especially when time-to-first-result matters, this simplicity is a major advantage.
+
+Keras remains relevant beyond beginner use cases. Its abstraction layer can improve productivity in production-oriented settings where standardized training scripts, consistent configuration patterns, and stable serialization formats are beneficial. At the same time, highly customized research workflows sometimes require dropping down to lower-level TensorFlow primitives to implement nonstandard training logic, novel operators, or specialized distributed strategies. In practice, Keras is often used as the default entry point for model development, with selective use of lower-level APIs when fine-grained control or performance tuning becomes necessary.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{PyTorch}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PyTorch is one of the most widely used deep learning frameworks in research and increasingly in industry. A major reason for its popularity is the combination of a Python-first design and an imperative programming style. Models are defined and executed in a way that closely resembles standard Python code, which makes experiments easier to read, modify, and debug. Its dynamic computation graph paradigm supports flexible control flow and rapid iteration, which is particularly valuable for research settings where architectures, losses, and training procedures change frequently.
+
+Beyond the core framework, PyTorch is supported by a large and active ecosystem. Higher-level libraries such as PyTorch Lightning provide structure around training loops, configuration management, logging, and distributed execution, helping teams reduce boilerplate while keeping the underlying PyTorch model code accessible. Domain-specific toolkits extend PyTorch for common CV workloads. For instance, Detectron2 offers well-engineered pipelines for object detection and segmentation. Together, these components enable users to start from strong baselines, integrate pretrained models, and scale experiments from a single GPU to multi-GPU or multi-node environments with comparatively little friction.
+
+PyTorch also places strong emphasis on interoperability and performance. Optimized tensor kernels, mixed-precision training support, and GPU acceleration make it suitable for large models, while export and compilation pathways can improve inference efficiency and deployment portability. In practice, PyTorch often serves as the framework of choice for rapid prototyping and debugging in research.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{scikit-learn}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+scikit-learn is a cornerstone of classical ML in Python and remains a default choice for many tabular and small-to-medium scale ML tasks. It provides efficient, well-tested implementations of widely used algorithms for classification, regression, clustering, dimensionality reduction, and anomaly detection, complemented by utilities for preprocessing, feature engineering, and model selection. Because these methods often serve as strong baselines and can be easier to interpret than deep neural networks, scikit-learn plays an important role in both applied projects and research workflows.
+
+A defining strength of scikit-learn is its consistent and composable API. Estimators follow a common interface, which makes it straightforward to swap models, compare approaches, and build reproducible pipelines. scikit-learn also includes robust model evaluation functionality, including cross-validation utilities, grid and randomized search, and a broad set of metrics, which helps users establish reliable experimental protocols.
+
+In practice, scikit-learn is frequently used to benchmark deep learning approaches, to build lightweight models when data is limited, and to develop interpretable solutions for structured datasets. It also integrates naturally with the broader Python ecosystem. While it is not designed for large-scale GPU training, scikit-learn remains central for classical ML and is particularly valuable for education, rapid baselining, and production scenarios where simplicity, stability, and interpretability are priorities.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{TensorFlow and TensorBoard}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+TensorFlow is one of the most widely used deep learning frameworks in both research and production settings. It combines a comprehensive ecosystem for model development, training, and deployment with strong support for hardware acceleration and scalable execution. A central concept in TensorFlow is graph-based computation. By representing operations as a computational graph, TensorFlow can optimize execution, enable efficient deployment, and support distributed training across multiple devices and machines. In practice, modern TensorFlow workflows often blend eager execution for interactive development with graph compilation for performance and portability.
+
+TensorFlow is accompanied by TensorBoard, a widely used visualization and monitoring tool for inspecting training dynamics and experiment artifacts. TensorBoard supports logging of scalar metrics (e.g., loss and accuracy), model graphs, histograms, embeddings, and qualitative outputs such as images, which helps practitioners debug models, compare runs, and communicate results.
+
+The integration of Keras as a high-level API (tf.keras) provides a user-friendly entry point to TensorFlow. Keras enables concise model definitions, standardized training loops, and practical utilities such as callbacks, making it well suited for rapid prototyping, teaching, and many applied workflows. At the same time, TensorFlow exposes lower-level APIs for custom training logic, advanced distributed strategies, and performance tuning, which is valuable for large-scale training and production constraints.
+
+A key differentiator of TensorFlow is its production-oriented tooling. Model serialization, deployment pathways, and serving options are designed to support reliable inference in real systems, including scenarios where models must run on servers, mobile devices, or specialized accelerators. As a result, TensorFlow is often chosen when end-to-end lifecycle support, integration with existing production infrastructure, and stable deployment targets are important requirements, while still remaining a capable framework for research and experimentation.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Computer Vision Frameworks, Libraries and Tools}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CV tooling combines two historically distinct layers: (i) classical CV libraries focused on geometry, filtering, feature engineering, and calibration, and (ii) learning frameworks that provide end-to-end trainable pipelines for detection, segmentation, tracking, and beyond. In practice, these layers often coexist: classical methods handle preprocessing, image formation, and geometric constraints, while learning models deliver robust representations and task performance.
+
+CV frameworks typically provide more than model code. Ecosystems also often include pretrained weights and model zoos for strong baselines and transfer learning, configuration systems that make experiments reproducible and comparable, dataset adapters for common formats (e.g., COCO-style annotations) and efficient data loading, and evaluation utilities implementing standard metrics and benchmarking protocols. Many toolkits further offer deployment-oriented features such as export utilities, inference wrappers, and hardware-specific optimizations.
+
+Because CV workloads are sensitive to input resolution, augmentation, and annotation conventions, interoperability is often determined less by the model architecture and more by consistent data schemas, augmentation semantics, and evaluation settings. Consequently, robust CV pipelines place strong emphasis on dataset management, careful metric reporting, and end-to-end profiling from data loading to inference.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\begin{longtable}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.55\textwidth}|}
+    \caption{Computer vision frameworks, libraries and tools.} \\
+
+
+    \hline
+    \textbf{Framework, library, or tool} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endfirsthead
+
+    \hline
+    \textbf{Framework, library, or tool} & \textbf{Modality} & \textbf{Typical tasks / notes} \\
+    \hline
+    \endhead
+
+    \multicolumn{3}{r}{\textit{continued on next page}} \\
+    \endfoot
+
+    \endlastfoot
+
+
+    Detectron2 \cite{wu2019detectron2} & Computer vision (DL) & Modular detection/segmentation toolkit (e.g., Faster/Mask R-CNN, RetinaNet); configuration-driven experiments, COCO-style dataset/evaluation utilities; strong research baselines. \\ \hline
+    OpenCV \cite{bradski2000opencv} & Computer vision (classical) & Comprehensive CV algorithms and utilities (filtering, transforms, features, optical flow, calibration, I/O); C++ core with Python bindings; common for preprocessing/postprocessing and real-time pipelines. \\ \hline
+    Single Shot MultiBox Detector (SSD) \cite{liu2016ssd} & Object detection & One-stage detector family for efficient real-time detection; baseline/reference concept; trade-off between speed and accuracy, may struggle on small objects depending on setup. \\ \hline
+    You Only Look Once (YOLO) \cite{redmon2016you} & Object detection & One-stage real-time detection paradigm with many iterations/variants; practical pipelines with strong pretrained weights, streamlined training scripts, export-friendly deployment options. \\ \hline
+\end{longtable}
+
+
+
+
+\clearpage
+
+
+
+
+\subsection{Detectron2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Detectron2 is a modular object detection and segmentation framework from Meta AI. It implements widely used architectures such as Faster R-CNN, Mask R-CNN, RetinaNet, and related variants, and provides a well-structured training and evaluation pipeline with a configuration-driven workflow.
+
+A major strength of Detectron2 is its emphasis on research-friendly extensibility. Core components such as backbones, proposal mechanisms, heads, and losses are designed to be swapped and extended with relatively little boilerplate. Dataset registration and standardized evaluation support common benchmarks (notably COCO-style tasks) and facilitate fair comparisons. The configuration-centric approach also improves reproducibility by making experiments easier to share and rerun, which is particularly valuable for ablation studies.
+
+Detectron2 is commonly used for rapid prototyping in detection/instance segmentation research and as a strong baseline for custom CV tasks. Practical limitations can arise when pipelines deviate substantially from supported annotation schemas or when deployment constraints require minimal dependencies. In such cases, exporting models and building lightweight inference wrappers becomes an important engineering step.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{OpenCV}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+OpenCV is one of the most widely used open-source libraries for classical computer vision, providing a comprehensive collection of algorithms and utilities for image and video processing. It covers fundamental operations such as filtering, geometric transformations, feature detection and description, optical flow, stereo vision, and camera calibration. Furthermore, it also includes practical components for working with image and video I/O, codecs, and basic visualization. Because these building blocks appear in many pipelines regardless of whether deep learning is used, OpenCV remains a central dependency in a wide range of ML/CV systems.
+
+A major advantage of OpenCV is its language and platform support. The core library is implemented in C++, with bindings for Python and interfaces for additional languages, which makes it accessible for rapid prototyping as well as performance-oriented applications. In practice, developers often use Python bindings during experimentation and then rely on the native C++ API for deployment scenarios. OpenCV also integrates well with common tooling for robotics and perception, and it is frequently used to implement preprocessing steps, data augmentation utilities, and postprocessing stages.
+
+For performance-critical workloads, OpenCV offers hardware acceleration options for selected modules, including GPU-oriented backends depending on the build configuration and platform. This makes it suitable for real-time applications such as robotics, industrial inspection, or augmented reality, where classical vision algorithms must run at interactive frame rates. Even when deep learning models dominate the core prediction task, OpenCV often remains essential for handling input acquisition, geometric corrections, visualization overlays, and classical components that complement learned representations.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Single Shot MultiBox Detector (SSD)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The Single Shot MultiBox Detector (SSD) is a family of one-stage object detectors designed for efficient, real-time detection without a separate region proposal stage. SSD predicts class probabilities and bounding box offsets directly from multiple feature maps at different resolutions, allowing it to detect objects across a range of scales. Historically, SSD became popular because it offered an attractive trade-off between speed and accuracy, and it remains a common baseline and conceptual reference point for modern one-stage detectors.
+
+In practice, SSD-style detectors are often used when low latency and implementation simplicity are priorities, for example in embedded or edge scenarios where throughput constraints are strict. Compared with two-stage approaches (e.g., Faster R-CNN variants), SSD generally reduces computational overhead and can be easier to deploy, although performance may be lower for small objects depending on backbone choice, feature pyramid design, and training setup. Many later one-stage detectors build on similar ideas while improving feature fusion, anchor handling, and training stability.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{You Only Look Once (YOLO)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+You Only Look Once (YOLO) popularized real-time object detection by framing detection as a single, end-to-end prediction problem rather than a multi-stage pipeline. YOLO-style models are typically one-stage detectors that predict bounding boxes and class probabilities directly from feature maps, which enables high throughput and comparatively low latency. This design made YOLO particularly attractive for applications such as robotics, industrial inspection, and video analytics, where inference speed and operational simplicity are often as important as peak benchmark accuracy.
+
+Over time, YOLO has evolved through multiple iterations and community-driven variants, incorporating improvements in backbones, feature pyramid designs, loss functions, and training strategies. Modern derivatives prioritize practical usability, including sensible defaults, strong pretrained weights, streamlined training scripts, and deployment-friendly export options. Frameworks maintained by active communities have lowered the barrier to applying YOLO models to new datasets by providing clear configuration patterns, augmentation pipelines, and tooling for evaluation and visualization.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Supporting Tools and Ecosystems}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+End-to-end ML/CV systems depend on more than model training code. Supporting tools address the surrounding lifecycle: collecting and labeling data, tracking experiments, managing versions of datasets and models, explaining model behavior, and operationalizing inference in production. These components often determine whether a project scales beyond a single developer and whether results remain reproducible and auditable.
+
+In practice, supporting ecosystems cover data-centric workflows (annotation, quality control, dataset versioning, and lineage tracking), experiment management (logging metrics, artifacts, and configurations, comparing runs, and managing checkpoints), optimization utilities (hyperparameter search, distributed tuning, and early stopping), interpretability and validation (explanations, bias checks, and robustness testing), and operational tooling (model packaging, serving, monitoring, and rollback strategies). Because many failures in deployed ML systems originate outside the model itself (data drift, pipeline bugs, or unmet governance requirements), these tools are essential for building reliable and maintainable solutions.
+
+The following sections highlight common categories and representative examples.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Annotation and labeling tools}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Annotation is often the dominant bottleneck in supervised learning because it is costly, time-consuming, and difficult to scale without compromising quality. In CV projects, labels are not just ground truth but an operational specification of the task. Ambiguous class definitions, inconsistent polygon boundaries, or untracked guideline changes can introduce noise that limits achievable performance and makes benchmarking misleading. Practical annotation work therefore extends beyond drawing boxes or masks. It includes defining label taxonomies and edge cases, training annotators, enforcing consistent guidelines, running review loops, and measuring inter-annotator agreement or other quality proxies.
+
+Open-source tools such as CVAT, LabelImg, and the VGG Image Annotator are widely used because they provide approachable interfaces for common annotation types (classification, bounding boxes, polygons, and keypoints) and can be self-hosted, which is attractive for cost control and privacy-sensitive datasets. Commercial platforms such as Labelbox and Supervisely typically add capabilities that become important in larger efforts, such as multi-user collaboration, project management views, audit trails, role-based access control, integrated QA workflows (review, consensus, and dispute resolution), dataset and annotation versioning, and automation features, which includes model-assisted labeling, pre-labeling, and active-learning-style prioritization of uncertain samples. In practice, the most effective annotation setups treat labeling as a continuous data-engineering process rather than a one-time step, with explicit governance for guideline changes, systematic sampling for quality checks, and integration between annotation outputs, dataset splits, and downstream training/evaluation pipelines.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Data preprocessing and management}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Managing large datasets efficiently is essential because data volume, heterogeneity, and provenance quickly become limiting factors as ML/CV projects scale beyond a single machine. In practice, the challenge is not only storing terabytes of files, but reliably transforming, validating, and serving data to training and evaluation pipelines without silent corruption, leakage between splits, or inconsistent preprocessing. Distributed processing frameworks such as Apache Spark and the Apache Hadoop ecosystem are commonly used to parallelize heavy ETL workloads, join large tabular sources, and compute aggregate statistics or features across clusters. These systems help to move expensive preprocessing steps upstream instead of repeating them during training. They furthermore support scheduling, fault tolerance, and scalable I/O patterns that are difficult to achieve with ad hoc scripts.
+
+Researchers must also version the data itself and record how it was produced. Tools such as DVC (Data Version Control) bring Git-like workflows to datasets and artifacts by tracking data versions via content hashes and connecting them to specific code and pipeline stages, which is especially useful when iterating on cleaning rules, labeling guidelines, or feature extraction. Complementing this, platforms such as MLflow focus on experiment tracking and management by logging parameters, metrics, and artifacts (e.g., models, plots, and reports).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Hyperparameter optimization}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Hyperparameter tuning can dramatically affect model performance since many critical behaviors are controlled by settings that are not learned directly from data. Learning rates, optimizer parameters, weight decay, augmentation strength, batch size, architecture widths/depths, loss weights, and postprocessing thresholds can all shift the trade-off between accuracy, speed, and robustness. Yet, in modern pipelines, tuning is also intertwined with resource constraints. A configuration that works well on a single GPU may be unstable or inefficient under distributed training, and memory limits can force different batch sizes or precision settings that change the effective optimization dynamics. For these reasons, systematic tuning is often necessary to produce fair comparisons between approaches and to obtain strong baselines that reflect the true capability of a method.
+
+Libraries such as Optuna, Hyperopt, and Ray Tune support structured optimization of hyperparameters using strategies that go beyond naive grid search. They provide sampling methods and Bayesian optimization variants, handle conditional search spaces, and integrate early stopping or pruning to terminate unpromising runs before they consume large budgets. Parallel and distributed execution is a key practical feature. Tuning can be scaled across multiple GPUs or nodes, and schedulers can allocate resources adaptively based on intermediate results. In workflows, tuning frameworks are typically combined with experiment tracking and configuration management so that each trial is fully reproducible and comparable, so that the final selected configuration can be promoted from research to production with a documented provenance.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Visualization and model interpretability}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Visualization is crucial for both model debugging and effective communication because many failure modes are easier to detect visually than through aggregate metrics alone. Training curves can reveal instability, overfitting, poor learning-rate schedules, or data pipeline issues, whereas qualitative inspections can uncover systematic errors such as missed small objects, boundary artifacts in segmentation, or spurious correlations driven by backgrounds or acquisition settings. In practice, strong visualization workflows combine scalar metrics with sample predictions, attention or saliency maps, confusion matrices, embedding projections, and data-distribution summaries, enabling to diagnose problems early and to justify design decisions.
+
+Tools such as TensorBoard and Weights \& Biases support this by providing real-time logging, comparison of runs, and centralized dashboards for metrics, hyperparameters, and artifacts. These platforms help maintain an experiment record that is especially valuable when many trials are running in parallel or when results need to be audited later. They also encourage better operational hygiene by making it easy to standardize what gets logged (e.g., training curves, learning-rate schedules, and system utilization) and to share results across collaborators.
+
+Interpretability libraries including SHapley Additive exPlanations (SHAP) and Local Interpretable Model-Agnostic Explanations (LIME) complement the process of monitoring by providing mechanisms to explain model predictions and to probe which features or regions drive decisions. While interpretability does not automatically guarantee correctness, it can surface brittle behaviors, reveal leakage or proxy variables, and highlight biases that would be missed by headline performance numbers. In sensitive domains, explanations can support stakeholder trust and facilitate debugging and governance by connecting model outputs to understandable evidence. In practice, interpretability is most effective when paired with targeted evaluation by analyzing explanations on curated failure cases, subgroup slices, and distribution-shift scenarios, rather than treating explanations as a purely illustrative add-on.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Deployment and model serving}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+For production deployment, dedicated serving frameworks help bridge the gap between a trained model and a reliable inference service. Systems such as TensorFlow Serving and TorchServe provide standardized mechanisms to load versioned models, expose stable inference APIs, batch requests for throughput, and manage concurrency, while integrating with monitoring and logging pipelines. This reduces the amount of custom infrastructure code required and supports common operational requirements such as canary releases, rollback to previous model versions, and controlled updates without service downtime. In practice, production deployment also depends on careful packaging of preprocessing and postprocessing logic, as many real-world failures arise from mismatches between training-time and serving-time data handling rather than from the model itself.
+
+Interoperability formats and runtimes play an increasingly important role in heterogeneous environments. ONNX (Open Neural Network Exchange) provides a common model representation that can enable transfer between frameworks and deployment targets, particularly when inference must run in a different stack than training. This can simplify the path to optimized inference on specific hardware or in standardized serving environments, although practical success depends on operator coverage, supported model features, and consistent preprocessing semantics. As a result, export and validation steps are typically treated as part of the deployment pipeline.
+
+Finally, containerization and orchestration technologies enable robust, scalable operation. Docker packages the model service together with its runtime dependencies so that deployments behave consistently across machines. Kubernetes then manages scaling, resource allocation, health checks, rolling updates, and failure recovery, which is essential when inference must run continuously under variable load. Combined with observability tooling and drift monitoring, these components form the operational backbone of production systems.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Performance and Benchmarking}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Performance evaluation in ML/CV has two complementary goals: (i) model quality on representative tasks and datasets, and (ii) system efficiency under realistic constraints (latency, throughput, memory, and cost). Meaningful benchmarking therefore goes beyond reporting a single accuracy number and instead considers the entire pipeline from data loading and preprocessing to training/inference execution and postprocessing.
+
+Two practical distinctions are especially important. First, microbenchmarks versus end-to-end benchmarks: microbenchmarks (e.g., single-kernel throughput) help identify low-level bottlenecks, while end-to-end benchmarks capture overheads such as input pipelines, augmentation, synchronization in distributed training, and model export/inference wrappers. Second, controlled versus application-specific evaluation: standard benchmarks enable comparison across papers and tools, but application deployments often require custom metrics, domain-specific test sets, and stress tests that reflect real operating conditions.
+
+To make benchmarks reproducible and interpretable, it is good practice to document hardware details (CPU/GPU type and memory), software versions (drivers, framework, and CUDA/cuDNN if applicable), training and inference settings (batch size, precision, and input resolution), the measurement protocol (warm-up, number of runs, and aggregation statistics), and whether determinism constraints were enabled. Finally, efficiency metrics are increasingly relevant alongside accuracy: inference latency, throughput, peak memory usage, and energy/cost considerations can dominate tool selection in production settings.
+
+The following sections summarize common metrics, benchmark datasets, and typical approaches for comparing frameworks and implementations.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Performance metrics}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Benchmarking model performance in ML and CV typically combines task-specific quality metrics with choices about averaging, thresholds, and evaluation protocol, as the same raw predictions can yield very different scores depending on how they are aggregated. For classification, commonly reported measures include the F1-score and its alternatives such as precision, recall, and accuracy, often complemented by confusion matrices when probabilistic outputs matter. In imbalanced settings, micro- and macro-averaging, per-class reporting, and threshold selection can have a larger effect on interpretability than the headline number itself.
+
+For object detection, evaluation typically accounts for both classification and localization quality. Mean average precision (mAP) is widely used because it summarizes precision and recall across confidence thresholds and incorporates overlap criteria based on the intersection over union (IoU) between predictions and ground truth. Modern benchmarks often report mAP at multiple IoU thresholds and across object sizes to reflect the fact that small objects and high localization precision can be disproportionately challenging. For segmentation, IoU is a standard measure for region overlap, while the Dice score is commonly used in settings where foreground regions are small or class imbalance is severe. In practice, segmentation evaluation may also include boundary-focused metrics or per-class IoU to capture failure modes that are not visible in a single global score.
+
+Across tasks, a key best practice is to pair scalar metrics with qualitative inspection and slice-based analysis. Reporting aggregate performance alone can hide systematic errors on specific subgroups, imaging conditions, or rare classes. Consequently, meaningful benchmarking typically combines standardized metrics with transparent protocols, subgroup breakdowns, and representative visual examples of both successes and failures.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Benchmark datasets}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Standard benchmark datasets have played a major role in accelerating progress by providing large labeled collections, standardized task definitions, and widely adopted evaluation protocols. Datasets such as ImageNet, MS COCO (Microsoft Common Objects in Context), and PASCAL VOC (PASCAL Visual Object Classes) helped establish common baselines and enabled meaningful comparison between methods by reducing ambiguity about training and test splits, label formats, and metrics. Their influence extends beyond leaderboards. They shaped model architectures, pretraining practices, and data augmentation conventions, essentially providing the foundation for transfer learning workflows where pretrained weights on large-scale benchmarks are adapted to downstream tasks with limited labeled data.
+
+In classical ML, widely used tabular repositories and competition platforms serve a similar role. The UCI Machine Learning Repository, for instance, provides a curated set of datasets that are frequently used for teaching, algorithm comparison, and baseline experimentation, particularly for regression and classification tasks in structured data. Kaggle, by contrast, offers a broad range of datasets and competitive challenges that can encourage strong end-to-end practices, including feature engineering, cross-validation discipline, and public sharing of solution approaches. Many teams use Kaggle-style problems as pragmatic testbeds for pipeline development and rapid iteration, even when the final application domain is different.
+
+At the same time, benchmark datasets must be used with awareness of their limitations. Performance on popular datasets can saturate, and models may overfit to benchmark-specific biases or annotation artifacts. Dataset shifts between benchmarks and real conditions are common, and benchmark labels may not reflect the ambiguity or noise present in operational data. For these reasons, strong practice combines standard benchmarks with domain-specific validation sets, careful documentation of data provenance and labeling guidelines, and slice-based evaluation that reflects the conditions and failure modes relevant to the intended application.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Framework benchmarking}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Comparisons of ML frameworks often focus on computational efficiency, memory usage, and ease of scaling, but meaningful benchmarking requires a careful definition of what is being compared. Raw throughput depends on model architecture, input shapes, batch size, precision, and the maturity of optimized kernels on a given hardware stack. Memory behavior is similarly. Here, frameworks differ in how they schedule operations, materialize intermediate activations, manage caches, and support techniques such as gradient checkpointing or activation recomputation. Scaling adds further complexity because multi-GPU and multi-node efficiency depends on communication backends, parallelism strategy, and the overhead introduced by input pipelines and synchronization. As a result, practical framework benchmarking is most informative when it is end-to-end, includes a clearly documented environment, and reports not only speed but also stability, determinism settings, and operational friction.
+
+Framework design choices also influence developer workflow. PyTorch's dynamic and imperative execution style is often experienced as more intuitive for research and rapid prototyping because model behavior follows standard Python control flow and debugging is straightforward. TensorFlow offers a spectrum between eager execution and graph compilation, and graph-based execution can be advantageous when portability, optimization, and standardized deployment pathways are priorities. In practice, the best choice depends on the team's expertise, existing infrastructure, and the intended lifecycle of the system. Research-heavy projects may favor flexibility and iteration speed, while production-centric efforts may prioritize stable serving, integration with deployment targets, and long-term maintainability.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Conclusion and Outlook}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Software frameworks and tools are critical enablers of innovation in ML and CV because they shape how effectively ideas can be implemented, evaluated, shared, and deployed. Python-centric ecosystems dominate many workflows by combining high productivity with optimized native backends and accelerator support, while core frameworks such as TensorFlow and PyTorch provide the foundation for deep learning at scale. In CV, established libraries and ecosystems (e.g., OpenCV for classical processing and toolkits such as Detectron2 and YOLO-style pipelines for detection and segmentation) illustrate how reusable components, pretrained models, and standardized evaluation utilities accelerate both research and applied development. Supporting tools for annotation, dataset and experiment versioning, interpretability, and serving often determine whether projects remain reproducible and maintainable as they grow.
+
+Looking forward, tool development will likely continue to be shaped by transformer-centric and multimodal modeling, stronger emphasis on efficient training and inference, and increasing automation of tuning and pipeline management. At the same time, privacy, security, and governance requirements will push ecosystems toward better provenance tracking, auditability, and safe distributed learning patterns, while benchmarking will increasingly incorporate robustness and efficiency measures alongside accuracy. Practitioners should therefore evaluate tools not only by immediate convenience, but by long-term properties such as interoperability, clarity of abstractions, ecosystem stability, and deployment support, combined with disciplined engineering practices around environment management, version control, testing, and monitoring.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\clearpage
+
+
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{library}
+
+
+
+
+\end{document}
+
